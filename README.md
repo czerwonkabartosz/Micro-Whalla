@@ -20,7 +20,7 @@ var Client = micro.Client;
 var client = Client('example-service');
 
 client
-    .request('getDate', {param: new Date()})
+    .request('method', {param: new Date()})
     .timeout(1000)
     .send()
     .on('success', function (result) {
