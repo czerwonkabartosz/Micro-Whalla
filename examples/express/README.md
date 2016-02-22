@@ -10,7 +10,7 @@ node api.js
 [http://localhost:3000/](http://localhost:3000/)
 
 api.js
-```
+```javascript
 var micro = require('../../index');
 micro.init({host: '192.168.99.100', port: 32768});
 
@@ -59,7 +59,7 @@ app.get('/cb', function (req, res) {
 ```
 
 service.js
-```
+```javascript
 var micro = require('../../index');
 micro.init({host: '192.168.99.100', port: 32768});
 

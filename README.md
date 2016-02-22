@@ -2,7 +2,7 @@
 
 A lightweight framework / module to write microservices with Node.js and Redis server. 
 
-```
+```javascript
 var micro = require('micro-whalla');
 
 var Service = micro.Service;
