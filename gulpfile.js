@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var eslint = require('gulp-eslint');
+var coveralls = require('gulp-coveralls');
 
 gulp.task('pre-test', function () {
   return gulp.src(['lib/**/*.js'])
@@ -20,6 +21,11 @@ gulp.task('lint', function () {
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
+});
+
+gulp.task('coveralls', function () {
+  return gulp.src('coverage/**/lcov.info')
+    .pipe(coveralls());
 });
 
 gulp.task('default', ['test'], function () {
