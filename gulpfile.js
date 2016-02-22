@@ -2,7 +2,6 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var eslint = require('gulp-eslint');
-var runSequence = require('run-sequence');
 
 gulp.task('pre-test', function () {
   return gulp.src(['lib/**/*.js'])
@@ -23,6 +22,6 @@ gulp.task('lint', function () {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('default', function () {
-  runSequence(['lint']);
+gulp.task('default', ['test'], function () {
+
 });
