@@ -23,10 +23,10 @@ client
     .request('method', {param: new Date()})
     .timeout(1000)
     .send()
-    .on('success', function (result) {
+    .on('succeeded', function (result) {
         console.log(result);
     })
-    .on('error', function (error) {
+    .on('failed', function (error) {
         console.error(result);
     });
 ```

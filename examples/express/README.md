@@ -11,72 +11,78 @@ node api.js
 
 api.js
 ```javascript
+var express = require('express');
+var app = express();
+
 var micro = require('../../index');
-micro.init({host: '192.168.99.100', port: 32768});
-
 var Client = require('../../index').Client;
+var service = new Client('service');
 
-var service = Client('service');
+micro.init({ host: '192.168.99.100', port: 32768 });
 
 app.get('/', function (req, res) {
-    service
-        .request('getDate', {param: new Date()})
-        .timeout(1000)
-        .send()
-        .on('success', function (result) {
-            res.end(result);
-        });
+  service
+    .request('getDate', { param: new Date() })
+    .timeout(1000)
+    .send()
+    .on('succeeded', function (result) {
+      res.end(result);
+    });
 });
 
 app.get('/error', function (req, res) {
-    service
-        .request('error')
-        .send()
-        .on('success', function (result) {
-            res.end(result);
-        })
-        .on('error', function (result) {
-            res.end(result);
-        });
+  service
+    .request('failed')
+    .send()
+    .on('succeeded', function (result) {
+      res.end(result);
+    })
+    .on('failed', function (result) {
+      res.end(result);
+    });
 });
 
 app.get('/fire', function (req, res) {
-    service
-        .request('error')
-        .fireAndForget()
-        .send();
+  service
+    .request('error')
+    .fireAndForget()
+    .send();
 
-    res.end();
+  res.end();
 });
 
 app.get('/cb', function (req, res) {
-    service
-        .request('getDate', {param: new Date()}, function (err, result) {
-            res.end(result);
-        })
-        .send();
+  service
+    .request('getDate', { param: new Date() }, function (err, result) {
+      res.end(result);
+    })
+    .send();
 });
+
+app.listen(3000);
+
 ```
 
 service.js
 ```javascript
 var micro = require('../../index');
-micro.init({host: '192.168.99.100', port: 32768});
-
 var Service = micro.Service;
-var service = Service('service');
+var service = new Service('service');
+
+micro.init({ host: '192.168.99.100', port: 32768 });
+
+function getDate(req, res) {
+  var data = req.data;
+  res.done('Today is ' + data.param);
+}
+
+function error(req, res) {
+  res.error(new Error('Error in service'));
+}
 
 service.register('getDate', getDate);
 service.register('error', error);
 
 service.start();
 
-function getDate(req, res) {
-    var data = req.data;
-    res.done('Today is ' + data.param);
-}
-
-function error(req, res) {
-    res.error(new Error('Error in service'));
-};
 ```

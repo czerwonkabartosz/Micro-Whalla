@@ -12,19 +12,19 @@ app.get('/', function (req, res) {
     .request('getDate', { param: new Date() })
     .timeout(1000)
     .send()
-    .on('success', function (result) {
+    .on('succeeded', function (result) {
       res.end(result);
     });
 });
 
 app.get('/error', function (req, res) {
   service
-    .request('error')
+    .request('failed')
     .send()
-    .on('success', function (result) {
+    .on('succeeded', function (result) {
       res.end(result);
     })
-    .on('error', function (result) {
+    .on('failed', function (result) {
       res.end(result);
     });
 });
