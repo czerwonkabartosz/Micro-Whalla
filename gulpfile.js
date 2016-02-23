@@ -5,7 +5,7 @@ var eslint = require('gulp-eslint');
 var coveralls = require('gulp-coveralls');
 
 gulp.task('pre-test', function () {
-  return gulp.src(['lib/**/*.js'])
+  return gulp.src(['lib/**/*.js', '!lib/micro-whalla.js'])
     .pipe(istanbul({ includeUntested: true }))
     .pipe(istanbul.hookRequire());
 });
