@@ -18,7 +18,7 @@ describe('Request', function () {
     };
   });
   describe('Constructor', function () {
-    it('creates a request', function () {
+    it('should create object with data', function () {
       var callback = function () {
         return 1;
       };
@@ -28,84 +28,44 @@ describe('Request', function () {
       assert.equal(request.callback, callback);
     });
   });
-  describe('Options', function () {
-    it('set fireAndForget', function () {
+  describe('Function: fireAndForget', function () {
+    it('should set fireAndForget option to true', function () {
       var request = makeRequest('method', { a: 1 });
       request.fireAndForget();
       assert.equal(request.options.fireAndForget, true);
     });
-    it('set timeout', function () {
+  });
+  describe('Function: timeout', function () {
+    it('should set timeout option with value', function () {
       var request = makeRequest('method', { a: 1 });
       request.timeout(50);
       assert.equal(request.options.timeout, 50);
     });
-    it('rejects invalid timeout', function () {
+    it('should throw error if put incorrect value', function () {
       var request = makeRequest('method', { a: 1 });
       assert.throws(function () {
         request.timeout(-1);
       });
     });
   });
-  describe('Timeouts', function () {
-    it('emit failed if timeout', function (done) {
-      var request = makeRequest('method', { a: 1 }, null);
-      request.timeout(50);
-      request.send();
-      request.on('failed', function (err) {
-        assert.isNotNull(err);
-        assert(request.sent.getTime() + request.options.timeout <= new Date().getTime());
-        done();
-      });
-    });
-    it('return error in callback if timeout', function (done) {
-      var request;
-      var callback = function (err) {
-        assert.isNotNull(err);
-        assert(request.sent.getTime() + request.options.timeout <= new Date().getTime());
-        done();
-      };
-      request = makeRequest('method', { a: 1 }, callback);
-      request.timeout(50);
-      request.send();
-    });
-    it('start and stop timeout handler', function () {
-      var request = makeRequest('method', { a: 1 });
-      request.timeout(50);
-      request.startTimeout();
-      assert.isNotNull(request.timeoutHandler);
-      request.stopTimeout();
-      assert.isNull(request.timeoutHandler);
-    });
-  });
-  describe('Expires', function () {
-    it('not expired if not sent', function () {
+  describe('Function: isExpired', function () {
+    it('should return false if not sent', function () {
       var request = makeRequest('method', { a: 1 });
       assert.isFalse(request.isExpired());
     });
-    it('not expired if not set timeout', function () {
+    it('should return false if not set timeout', function () {
       var request = makeRequest('method', { a: 1 });
       request.send();
       assert.isFalse(request.isExpired());
     });
-    it('not expired if fire and forget', function () {
+    it('should return false if fire and forget', function () {
       var request = makeRequest('method', { a: 1 });
       request.timeout(1000);
       request.fireAndForget();
       request.send();
       assert.isFalse(request.isExpired());
     });
-    it('expired if time elapsed', function (done) {
-      var request = makeRequest('method', { a: 1 });
-      request.timeout(50);
-      request.send();
-      request.stopTimeout();
-
-      setTimeout(function () {
-        assert.isTrue(request.isExpired());
-        done();
-      }, 50);
-    });
-    it('not expired if time not elapsed', function (done) {
+    it('should return false if time not elapsed', function (done) {
       var request = makeRequest('method', { a: 1 });
       request.timeout(50);
       request.send();
@@ -116,9 +76,75 @@ describe('Request', function () {
         done();
       }, 40);
     });
+    it('should return true  if time elapsed', function (done) {
+      var request = makeRequest('method', { a: 1 });
+      request.timeout(50);
+      request.send();
+      request.stopTimeout();
+
+      setTimeout(function () {
+        assert.isTrue(request.isExpired());
+        done();
+      }, 50);
+    });
   });
-  describe('Json', function () {
-    it('transforms and creates from JSON', function () {
+  describe('Function: send', function () {
+    it('should call send on client', function () {
+      var request = makeRequest('method', { a: 1 });
+
+      request.send();
+      assert(clientMock.send.calledOnce);
+    });
+    it('should call startTimeout', function () {
+      var request = makeRequest('method', { a: 1 });
+      request.startTimeout = sinon.spy();
+
+      request.send();
+      assert(request.startTimeout.calledOnce);
+    });
+    it('should call addRequest if not set fireAndForget', function () {
+      var request = makeRequest('method', { a: 1 });
+
+      request.send();
+      assert(clientMock.addRequest.calledOnce);
+    });
+    it('should not call startTimeout if set fireAndForget', function () {
+      var request = makeRequest('method', { a: 1 });
+      request.startTimeout = sinon.spy();
+
+      request.fireAndForget();
+      request.send();
+      assert(request.startTimeout.notCalled);
+    });
+    it('should not call addRequest if set fireAndForget', function () {
+      var request = makeRequest('method', { a: 1 });
+
+      request.fireAndForget();
+      request.send();
+      assert(clientMock.addRequest.notCalled);
+    });
+    it('should trow error if not set client', function () {
+      var request = makeRequest('method', { a: 1 }, null, null);
+
+      assert.throws(function () {
+        request.send();
+      });
+    });
+  });
+  describe('Function: toJSON', function () {
+    it('should return json with data from object', function () {
+      var clientId = 1;
+      var request = makeRequest('method', { a: 1 });
+      var json = request.toJSON(clientId);
+      var requestFromJson = JSON.parse(json);
+      assert.equal(requestFromJson.id, request.id);
+      assert.equal(requestFromJson.method, request.method);
+      assert.equal(requestFromJson.data.a, request.data.a);
+      assert.equal(requestFromJson.clientId, clientId);
+    });
+  });
+  describe('Function: fromJson', function () {
+    it('should return object with data from json', function () {
       var clientId = 1;
       var request = makeRequest('method', { a: 1 });
       var json = request.toJSON(clientId);
@@ -129,34 +155,52 @@ describe('Request', function () {
       assert.equal(requestFromJson.clientId, clientId);
     });
   });
-  describe('Send', function () {
-    it('send', function () {
+  describe('Function: startTimeout', function () {
+    it('should create timeout if is set timeout option', function () {
       var request = makeRequest('method', { a: 1 });
-      request.startTimeout = sinon.spy();
-
-      request.send();
-
-      assert(clientMock.send.calledOnce);
-      assert(clientMock.addRequest.calledOnce);
-      assert(request.startTimeout.calledOnce);
+      request.timeout(50);
+      request.startTimeout();
+      assert.isNotNull(request.timeoutHandler);
     });
-    it('send with fire and forget', function () {
+    it('should not create timeout if is not set timeout option', function () {
       var request = makeRequest('method', { a: 1 });
-      request.startTimeout = sinon.spy();
-
-      request.fireAndForget();
-      request.send();
-
-      assert(clientMock.send.calledOnce);
-      assert(clientMock.addRequest.notCalled);
-      assert(request.startTimeout.notCalled);
+      request.startTimeout();
+      assert.isFalse(!!request.timeoutHandler);
     });
-    it('send without client', function () {
-      var request = makeRequest('method', { a: 1 }, null, null);
-
-      assert.throws(function () {
-        request.send();
+    it('should create timeout with function to emit failed status after timeout', function (done) {
+      var startTime;
+      var request = makeRequest('method', { a: 1 });
+      request.timeout(50);
+      request.startTimeout();
+      startTime = new Date();
+      request.on('failed', function (error) {
+        assert.isNotNull(error);
+        assert(startTime.getTime() + request.options.timeout <= new Date().getTime());
+        done();
       });
+    });
+    it('should create timeout with function to call callback after timeout', function (done) {
+      var request;
+      var startTime;
+      var callback = function (err) {
+        assert.isNotNull(err);
+        assert(startTime.getTime() + request.options.timeout <= new Date().getTime());
+        done();
+      };
+      request = makeRequest('method', { a: 1 }, callback);
+      request.timeout(50);
+      request.startTimeout();
+      startTime = new Date();
+    });
+  });
+  describe('Function: stopTimeout', function () {
+    it('should set null in timeoutHandler', function () {
+      var request = makeRequest('method', { a: 1 });
+      request.timeout(50);
+      request.startTimeout();
+      assert.isNotNull(request.timeoutHandler);
+      request.stopTimeout();
+      assert.isNull(request.timeoutHandler);
     });
   });
 });

@@ -7,7 +7,7 @@ var Response = require('./../lib/response');
 
 describe('Response', function () {
   describe('Constructor', function () {
-    it('creates a response', function () {
+    it('should create object with data', function () {
       var request;
       var response;
       var callback = sinon.spy();
@@ -38,49 +38,67 @@ describe('Response', function () {
       finishProcessCallback = sinon.spy();
       response = makeResponse(finishProcessCallback);
     });
-    it('done', function () {
-      response.done('OK');
+    describe('Function: done', function () {
+      it('should call finish process callback', function () {
+        response.done('OK');
 
-      assert(finishProcessCallback.calledOnce);
-      args = service.sendEvent.getCall(0).args;
-      assert.equal(args[0], 1);
-      assert.equal(args[1].id, response.id);
-      assert.equal(args[1].status, 'succeeded');
-      assert.equal(args[1].data, 'OK');
+        assert(finishProcessCallback.calledOnce);
+      });
+      it('should call sendEvent with correct data', function () {
+        response.done('OK');
+        args = service.sendEvent.getCall(0).args;
+        assert.equal(args[0], 1);
+        assert.equal(args[1].id, response.id);
+        assert.equal(args[1].status, 'succeeded');
+        assert.equal(args[1].data, 'OK');
+      });
     });
-    it('error', function () {
-      response.error(new Error('Error'));
+    describe('Function: error', function () {
+      it('should call finish process callback', function () {
+        response.error(new Error('Error'));
 
-      assert(finishProcessCallback.calledOnce);
-      args = service.sendEvent.getCall(0).args;
-      assert.equal(args[0], 1);
-      assert.equal(args[1].id, response.id);
-      assert.equal(args[1].status, 'failed');
-      assert.equal(args[1].error, 'Error');
+        assert(finishProcessCallback.calledOnce);
+      });
+      it('should call sendEvent with correct data', function () {
+        response.error(new Error('Error'));
+        args = service.sendEvent.getCall(0).args;
+        assert.equal(args[0], 1);
+        assert.equal(args[1].id, response.id);
+        assert.equal(args[1].status, 'failed');
+        assert.equal(args[1].error, 'Error');
+      });
     });
-    it('info', function () {
-      response.info({ step: 1 });
-
-      assert(finishProcessCallback.notCalled);
-      args = service.sendEvent.getCall(0).args;
-      assert.equal(args[0], 1);
-      assert.equal(args[1].id, response.id);
-      assert.equal(args[1].status, 'info');
-      assert.equal(args[1].data.step, 1);
+    describe('Function: info', function () {
+      it('should not call finish process callback', function () {
+        response.info({ step: 1 });
+        assert(finishProcessCallback.notCalled);
+      });
+      it('should call sendEvent with correct data', function () {
+        response.info({ step: 1 });
+        args = service.sendEvent.getCall(0).args;
+        assert.equal(args[0], 1);
+        assert.equal(args[1].id, response.id);
+        assert.equal(args[1].status, 'info');
+        assert.equal(args[1].data.step, 1);
+      });
     });
-    it('progress', function () {
-      response.progress(50);
-
-      assert(finishProcessCallback.notCalled);
-      args = service.sendEvent.getCall(0).args;
-      assert.equal(args[0], 1);
-      assert.equal(args[1].id, response.id);
-      assert.equal(args[1].status, 'progress');
-      assert.equal(args[1].data, 50);
+    describe('Function: progress', function () {
+      it('should not call finish process callback', function () {
+        response.progress(50);
+        assert(finishProcessCallback.notCalled);
+      });
+      it('should call sendEvent with correct data', function () {
+        response.progress(50);
+        args = service.sendEvent.getCall(0).args;
+        assert.equal(args[0], 1);
+        assert.equal(args[1].id, response.id);
+        assert.equal(args[1].status, 'progress');
+        assert.equal(args[1].data, 50);
+      });
     });
   });
-  describe('Events', function () {
-    it('not send events if request is fire and forget', function () {
+  describe('Function: event', function () {
+    it('should not call sendEvent if request is fire and forget', function () {
       var request;
       var response;
       var finishProcessCallback = sinon.spy();
