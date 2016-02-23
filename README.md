@@ -1,4 +1,7 @@
-# Micro Whalla
+# Micro Whalla 
+[![Build Status](https://travis-ci.org/czerwonkabartosz/Micro-Whalla.svg?branch=master)](https://travis-ci.org/czerwonkabartosz/Micro-Whalla) 
+[![Coverage Status](https://coveralls.io/repos/github/czerwonkabartosz/Micro-Whalla/badge.svg?branch=master)](https://coveralls.io/github/czerwonkabartosz/Micro-Whalla?branch=master)
+[![Dependency Status](https://david-dm.org/czerwonkabartosz/Micro-Whalla.svg)](https://david-dm.org/czerwonkabartosz/Micro-Whalla)
 
 A lightweight framework / module to write microservices with Node.js and Redis server. 
 
