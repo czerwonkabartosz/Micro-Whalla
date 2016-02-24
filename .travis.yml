@@ -1,9 +1,16 @@
 before_script:
-  - npm install -g gulp
+- npm install -g gulp
 language: node_js
 node_js:
-  - "4.1"
-  - "4.0"
+- '4.1'
+- '4.0'
+deploy:
+  provider: npm
+  on:
+    branch: master
+  email: czerwonka.bartosz@gmail.com
+  api_key:
+    secure: JbJ2Ie91NzjQF2qEy8uHNA/gGYS4IIoWlpSvYfjgP7h0IbniugYMT9C7l2qz0o2P1wl9gp7A0nmUdXnWEW4DKLGd6CRDqs33/SAHYHPyhttU5N6FP6BG97Z5YNURsGHlVvuVqfli89jN0kN7iNj4V5N0RMC3NSEyQYO8TodL96GX/Y0qEm1LBryR4/9ryM5WTnqm95Mmjh7BY+DgUtSYK3lGfPvVbWgdg6SSMnLVrkqLxLTUIUq00xKsYY6WTORit6E85OrqmgQFBF2jQ3yBzd5//eqtaKG6+ZdqF4TZDejcGWCF0YY4pDngOz+eNDjTkzthXpGLezucYN1Z6b/T4jsQlxOGrICltLLQlRHMI0ZGa46aFUkHC2nRXP0DM/dkAOtQTRfHeCYsRFLysfoVpJ4+QNrBqU7oat+2M2jCE9O4QP+N7q+YwkT5M9RDLMrzAtPkdm5KLRyQfWiBjESuFpT+DSzUAma8ysrU1z793TWGT1q3hSbECpLyRzDEtGC2MI5ozAhJ4x9JvWayhF0K/7/AtGzEk0CBWonCm1wxQ6hVsSfMzpxplh/3DIHPOJsTK1KvB5yqlrkNEfTeRgShpI8M9NFcLkC0kzdwy/63vFnYOobsFMpegciNTXsSg63H9f2IsMQ1mHJGC/LA5e/LA0QV+i5SnZkoO4uxQ3mU5Ro=
 script: gulp
 after_script:
-  - gulp coveralls
+- gulp coveralls
