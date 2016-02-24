@@ -3,9 +3,10 @@ var app = express();
 
 var micro = require('../../index');
 var Client = require('../../index').Client;
-var service = new Client('service');
+var service;
 
 micro.init({ host: '192.168.99.100', port: 32768 });
+service = new Client('service');
 
 app.get('/', function (req, res) {
   service
