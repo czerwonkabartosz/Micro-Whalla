@@ -1,12 +1,12 @@
 {
-  "serviceName": "micro-whalla",
-  "version": "1.0.0",
-  "description": "",
+  "name": "micro-whalla",
+  "version": "0.1.0",
+  "description": "A simple, fast framework for writing microservices in Node.js communicate using RPC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
-  "author": "Bartosz Czerwonka",
+  "author": "Bartosz Czerwonka <czerwonka.bartosz@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "node-uuid": "^1.4.7",
@@ -23,5 +23,22 @@
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.2.0",
     "sinon": "^1.17.3"
-  }
+  },
+  "keywords": [
+    "rpc",
+    "microservices",
+    "queue",
+    "worker",
+    "distributed",
+    "system",
+    "redis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/czerwonkabartosz/Micro-Whalla.git"
+  },
+  "bugs": {
+    "url": "https://github.com/czerwonkabartosz/Micro-Whalla/issues"
+  },
+  "homepage": "https://github.com/czerwonkabartosz/Micro-Whalla"
 }
