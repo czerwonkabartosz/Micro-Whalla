@@ -2,8 +2,11 @@ before_script:
 - npm install -g gulp
 language: node_js
 node_js:
-- '4.1'
-- '4.0'
+  - '0.10'
+  - '0.11'
+  - '0.12'
+  - '4.0'
+  - '4.1'
 deploy:
   provider: npm
   on:
