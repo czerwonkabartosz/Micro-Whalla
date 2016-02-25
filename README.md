@@ -1,7 +1,9 @@
 # Micro Whalla 
+[![npm version](https://badge.fury.io/js/micro-whalla.svg)](https://badge.fury.io/js/micro-whalla)
 [![Build Status](https://travis-ci.org/czerwonkabartosz/Micro-Whalla.svg?branch=master)](https://travis-ci.org/czerwonkabartosz/Micro-Whalla) 
 [![Coverage Status](https://coveralls.io/repos/github/czerwonkabartosz/Micro-Whalla/badge.svg?branch=master)](https://coveralls.io/github/czerwonkabartosz/Micro-Whalla?branch=master)
 [![Dependency Status](https://david-dm.org/czerwonkabartosz/Micro-Whalla.svg)](https://david-dm.org/czerwonkabartosz/Micro-Whalla)
+[![Gitter](https://badges.gitter.im/czerwonkabartosz/Micro-Whalla.svg)](https://gitter.im/czerwonkabartosz/Micro-Whalla?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 A simple, fast framework for writing microservices in Node.js communicate using RPC.
 It uses Redis server for communicate clients and services, it is making it fast, stable and easily scaling.
