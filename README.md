@@ -1,4 +1,6 @@
 # Micro Whalla 
+
+[![Join the chat at https://gitter.im/czerwonkabartosz/Micro-Whalla](https://badges.gitter.im/czerwonkabartosz/Micro-Whalla.svg)](https://gitter.im/czerwonkabartosz/Micro-Whalla?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/czerwonkabartosz/Micro-Whalla.svg?branch=master)](https://travis-ci.org/czerwonkabartosz/Micro-Whalla) 
 [![Coverage Status](https://coveralls.io/repos/github/czerwonkabartosz/Micro-Whalla/badge.svg?branch=master)](https://coveralls.io/github/czerwonkabartosz/Micro-Whalla?branch=master)
 [![Dependency Status](https://david-dm.org/czerwonkabartosz/Micro-Whalla.svg)](https://david-dm.org/czerwonkabartosz/Micro-Whalla)
