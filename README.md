@@ -1,4 +1,5 @@
 # Micro Whalla 
+
 [![npm version](https://badge.fury.io/js/micro-whalla.svg)](https://badge.fury.io/js/micro-whalla)
 [![Build Status](https://travis-ci.org/czerwonkabartosz/Micro-Whalla.svg?branch=master)](https://travis-ci.org/czerwonkabartosz/Micro-Whalla) 
 [![Coverage Status](https://coveralls.io/repos/github/czerwonkabartosz/Micro-Whalla/badge.svg?branch=master)](https://coveralls.io/github/czerwonkabartosz/Micro-Whalla?branch=master)
