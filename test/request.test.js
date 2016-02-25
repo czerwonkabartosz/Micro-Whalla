@@ -189,8 +189,8 @@ describe('Request', function () {
       };
       request = makeRequest('method', { a: 1 }, callback);
       request.timeout(50);
-      request.startTimeout();
       startTime = new Date();
+      request.startTimeout();
     });
   });
   describe('Function: stopTimeout', function () {
