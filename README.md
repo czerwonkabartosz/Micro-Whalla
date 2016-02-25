@@ -80,9 +80,7 @@ micro.init({ host: '192.168.99.100', port: 32768 });
 The ```opts``` fields are:
 - ```host```: string, Redis host.
 - ```port```: number, Redis port.
-- ```socket```: string, Redis socket to be used instead of a host and port.
 - ```db```: number, Redis DB index.
-- ```options```: options object, passed to node_redis. 
 
 ## Client
 ### Client(serviceName, opts)
