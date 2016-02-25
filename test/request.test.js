@@ -171,8 +171,8 @@ describe('Request', function () {
       var startTime;
       var request = makeRequest('method', { a: 1 });
       request.timeout(50);
-      request.startTimeout();
       startTime = new Date();
+      request.startTimeout();
       request.on('failed', function (error) {
         assert.isNotNull(error);
         assert(startTime.getTime() + request.options.timeout <= new Date().getTime());
