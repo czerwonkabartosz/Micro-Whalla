@@ -6,8 +6,9 @@
 [![Dependency Status](https://david-dm.org/czerwonkabartosz/Micro-Whalla.svg)](https://david-dm.org/czerwonkabartosz/Micro-Whalla)
 [![Gitter](https://badges.gitter.im/czerwonkabartosz/Micro-Whalla.svg)](https://gitter.im/czerwonkabartosz/Micro-Whalla?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-A simple, fast framework for writing microservices in Node.js communicate using RPC.
+A simple, fast framework for writing microservices in Node.js communicate using RPC / IPC.
 It uses Redis server for communicate clients and services, it is making it fast, stable and easily scaling.
+It can be used for interprocess communication, or for communication between servers.
 
 ```javascript
 var micro = require('micro-whalla');
@@ -53,6 +54,8 @@ client
 - Concurrent processing
 - Design based on Redis
 - Many methods in the service
+- Interprocess communication (IPC)
+- Servers communication (RPC)
 - Request timeouts
 - Fire And Forget
 - Processing callback events

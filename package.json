@@ -1,7 +1,7 @@
 {
   "name": "micro-whalla",
   "version": "0.1.0",
-  "description": "A simple, fast framework for writing microservices in Node.js communicate using RPC",
+  "description": "A simple, fast framework for writing microservices in Node.js communicate using RPC / IPC",
   "main": "index.js",
   "scripts": {
     "test": "gulp test"
@@ -26,12 +26,14 @@
   },
   "keywords": [
     "rpc",
+    "ipc",
+    "redis",
     "microservices",
-    "queue",
-    "worker",
+    "services",
+    "communication",
+    "process",
     "distributed",
-    "system",
-    "redis"
+    "system"
   ],
   "repository": {
     "type": "git",
