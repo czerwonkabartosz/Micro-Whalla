@@ -79,7 +79,7 @@ describe('Service', function () {
       sinon.stub(redis, 'client').returns({});
       sinon.stub(redis, 'pub').returns({});
     });
-    it('should throw error if handler is not function', function () {
+    it('should find file with method and register in service', function () {
       var fakeMethod = require('./method.fake');
       var args;
       var ServiceProxy = proxyquire('./../lib/service', {
