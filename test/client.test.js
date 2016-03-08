@@ -10,7 +10,7 @@ describe('Service', function () {
   describe('Constructor', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'sub').returns({});
       sinon.stub(Client.prototype, 'setup');
     });
     it('should create service with name', function () {
@@ -25,9 +25,9 @@ describe('Service', function () {
       var client = new Client('test');
       assert.isNotNull(client._client);
     });
-    it('should create service with events client', function () {
+    it('should create service with sub client', function () {
       var client = new Client('test');
-      assert.isNotNull(client._events);
+      assert.isNotNull(client._sub);
     });
     it('should call setup method', function () {
       var client = new Client('test');
@@ -35,14 +35,14 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.sub.restore();
       Client.prototype.setup.restore();
     });
   });
   describe('Function: setup', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({
+      sinon.stub(redis, 'sub').returns({
         on: sinon.spy(),
         once: function (name, callback) {
           callback();
@@ -52,32 +52,32 @@ describe('Service', function () {
     });
     it('should call once and wait for ready event', function () {
       var client;
-      redis.events.restore();
-      sinon.stub(redis, 'events').returns({
+      redis.sub.restore();
+      sinon.stub(redis, 'sub').returns({
         on: sinon.spy(),
         once: sinon.spy(),
         subscribe: sinon.spy()
       });
       client = new Client('test');
-      assert(client._events.once.calledWith('ready'));
+      assert(client._sub.once.calledWith('ready'));
     });
     it('should call on method and wait for message event', function () {
       var client = new Client('test');
-      assert(client._events.on.calledWith('message'));
+      assert(client._sub.on.calledWith('message'));
     });
-    it('should subscribe to events', function () {
+    it('should subscribe to sub', function () {
       var client = new Client('test');
-      assert(client._events.subscribe.calledWith(client.serviceName + client.id));
+      assert(client._sub.subscribe.calledWith(client.serviceName + client.id));
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.sub.restore();
     });
   });
   describe('Function: request', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'sub').returns({});
       sinon.stub(Client.prototype, 'setup');
     });
     it('should return request with data', function () {
@@ -91,13 +91,13 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.sub.restore();
       Client.prototype.setup.restore();
     });
   });
   describe('Function: send', function () {
     beforeEach(function () {
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'sub').returns({});
       sinon.stub(Client.prototype, 'setup');
     });
     it('should call lpush', function () {
@@ -176,14 +176,14 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.sub.restore();
       Client.prototype.setup.restore();
     });
   });
   describe('Function: onEvent', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'sub').returns({});
       sinon.stub(Client.prototype, 'setup');
     });
     it('should not throw error if not message', function () {
@@ -259,14 +259,14 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.sub.restore();
       Client.prototype.setup.restore();
     });
   });
   describe('Function: addRequest', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'sub').returns({});
       sinon.stub(Client.prototype, 'setup');
     });
     it('should add request to requests array', function () {
@@ -277,14 +277,14 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.sub.restore();
       Client.prototype.setup.restore();
     });
   });
   describe('Function: removeRequest', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'sub').returns({});
       sinon.stub(Client.prototype, 'setup');
     });
     it('should remove request from requests array', function () {
@@ -306,7 +306,7 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.sub.restore();
       Client.prototype.setup.restore();
     });
   });

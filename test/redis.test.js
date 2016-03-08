@@ -54,23 +54,47 @@ describe('Redis', function () {
       delete require.cache[require.resolve('./../lib/redis')];
     });
   });
-  describe('Function: events', function () {
+  describe('Function: pub', function () {
     var redis;
     beforeEach(function () {
       redis = require('./../lib/redis');
       sinon.stub(r, 'createClient').returns({});
     });
     it('should return new client if not exists', function () {
-      var events;
-      events = redis.events();
-      assert.isNotNull(events);
+      var pub;
+      pub = redis.pub();
+      assert.isNotNull(pub);
       assert(r.createClient.calledOnce);
     });
     it('should return exists client', function () {
-      var events;
-      events = redis.events();
-      events = redis.events();
-      assert.isNotNull(events);
+      var pub;
+      pub = redis.pub();
+      pub = redis.pub();
+      assert.isNotNull(pub);
+      assert(r.createClient.calledOnce);
+    });
+    afterEach(function () {
+      r.createClient.restore();
+      delete require.cache[require.resolve('./../lib/redis')];
+    });
+  });
+  describe('Function: sub', function () {
+    var redis;
+    beforeEach(function () {
+      redis = require('./../lib/redis');
+      sinon.stub(r, 'createClient').returns({});
+    });
+    it('should return new client if not exists', function () {
+      var sub;
+      sub = redis.sub();
+      assert.isNotNull(sub);
+      assert(r.createClient.calledOnce);
+    });
+    it('should return exists client', function () {
+      var sub;
+      sub = redis.sub();
+      sub = redis.sub();
+      assert.isNotNull(sub);
       assert(r.createClient.calledOnce);
     });
     afterEach(function () {
@@ -95,11 +119,11 @@ describe('Redis', function () {
       assert.equal(args[0].port, 1234);
     });
     it('should set options to create events with options', function () {
-      var events;
+      var pub;
       var args;
       redis.init({ host: '127.0.0.1', port: 1234 });
-      events = redis.events();
-      assert.isNotNull(events);
+      pub = redis.pub();
+      assert.isNotNull(pub);
       args = r.createClient.getCall(0).args;
       assert.equal(args[0].host, '127.0.0.1');
       assert.equal(args[0].port, 1234);

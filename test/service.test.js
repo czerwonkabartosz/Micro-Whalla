@@ -1,6 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 var sinon = require('sinon');
+var proxyquire = require('proxyquire');
 
 var Service = require('./../lib/service');
 var Request = require('./../lib/request');
@@ -11,7 +12,7 @@ describe('Service', function () {
   describe('Constructor', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'pub').returns({});
     });
     it('should create service with name', function () {
       var service = new Service('test');
@@ -25,9 +26,9 @@ describe('Service', function () {
       var service = new Service('test');
       assert.isNotNull(service._client);
     });
-    it('should create service with events client', function () {
+    it('should create service with pub client', function () {
       var service = new Service('test');
-      assert.isNotNull(service._events);
+      assert.isNotNull(service._pub);
     });
     it('should create service with default concurrency option', function () {
       var service = new Service('test');
@@ -39,13 +40,13 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.pub.restore();
     });
   });
   describe('Function: register', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'pub').returns({});
     });
     it('should throw error if handler is not function', function () {
       var service = new Service('test');
@@ -70,13 +71,49 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.pub.restore();
+    });
+  });
+  describe('Function: findAndRegisterMethods', function () {
+    beforeEach(function () {
+      sinon.stub(redis, 'client').returns({});
+      sinon.stub(redis, 'pub').returns({});
+    });
+    it('should throw error if handler is not function', function () {
+      var fakeMethod = require('./method.fake');
+      var args;
+      var ServiceProxy = proxyquire('./../lib/service', {
+        glob: function (param, callback) {
+          callback(null, ['./../test/method.fake']);
+        },
+        './redis': {
+          client: function () {
+            return {};
+          },
+          pub: function () {
+            return {};
+          }
+        }
+      });
+      var service = new ServiceProxy('test');
+      sinon.stub(service, 'register');
+      service.findAndRegisterMethods();
+
+      args = service.register.getCall(0).args;
+
+      assert(service.register.calledOnce);
+      assert.equal(args[0], fakeMethod.name);
+      assert.equal(args[1](), fakeMethod.method());
+    });
+    afterEach(function () {
+      redis.client.restore();
+      redis.pub.restore();
     });
   });
   describe('Function: start', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({});
+      sinon.stub(redis, 'pub').returns({});
     });
     it('should call process method', function () {
       var service = new Service('test');
@@ -87,31 +124,31 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.pub.restore();
     });
   });
   describe('Function: sendEvent', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({});
-      sinon.stub(redis, 'events').returns({ publish: sinon.spy() });
+      sinon.stub(redis, 'pub').returns({ publish: sinon.spy() });
     });
-    it('should call publish method on events', function () {
+    it('should call publish method on pub', function () {
       var service = new Service('test');
       var event = { id: 1, status: 'test', data: 1 };
       var helper = require('./../lib/helpers');
       service.sendEvent(1, event);
-      assert(service._events.publish.calledOnce);
-      assert(service._events.publish.calledWith(1, helper.serialize(event)));
+      assert(service._pub.publish.calledOnce);
+      assert(service._pub.publish.calledWith(1, helper.serialize(event)));
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.pub.restore();
     });
   });
   describe('Function: getNextRequest', function () {
     beforeEach(function () {
       sinon.stub(redis, 'client').returns({ brpop: sinon.stub() });
-      sinon.stub(redis, 'events').returns();
+      sinon.stub(redis, 'pub').returns();
     });
     it('should call brpop method with serviceName', function () {
       var service = new Service('test');
@@ -143,7 +180,7 @@ describe('Service', function () {
     });
     afterEach(function () {
       redis.client.restore();
-      redis.events.restore();
+      redis.pub.restore();
     });
   });
   describe('Function: process', function () {
@@ -155,7 +192,7 @@ describe('Service', function () {
           callback();
         }
       });
-      sinon.stub(redis, 'events').returns({ publish: sinon.spy() });
+      sinon.stub(redis, 'pub').returns({ publish: sinon.spy() });
     });
     it('should set running variable to 0', function () {
       var service;
@@ -285,7 +322,7 @@ describe('Service', function () {
     afterEach(function () {
       clock.restore();
       redis.client.restore();
-      redis.events.restore();
+      redis.pub.restore();
     });
   });
 });
