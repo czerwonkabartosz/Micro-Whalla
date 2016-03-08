@@ -164,6 +164,7 @@ describe('Request', function () {
     });
     it('should not create timeout if is not set timeout option', function () {
       var request = makeRequest('method', { a: 1 });
+      request.timeout(0);
       request.startTimeout();
       assert.isFalse(!!request.timeoutHandler);
     });
