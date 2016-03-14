@@ -174,6 +174,49 @@ describe('Service', function () {
       client.send(request);
       assert(client._client.expire.calledWith(client.serviceName, 30 * 60));
     });
+    it('should call get from redis client if request has cache option', function () {
+      var client;
+      var request;
+      sinon.stub(redis, 'client').returns({
+        get: sinon.stub()
+      });
+      client = new Client('test');
+      request = new Request('test', { a: 1 });
+      request.options.cache = 1000;
+      client.send(request);
+      assert(client._client.get.calledOnce);
+    });
+    it('should call onEvent when cache exists', function () {
+      var client;
+      var request;
+      sinon.stub(redis, 'client').returns({
+        get: function (err, callback) {
+          callback(null, { data: 1 });
+        }
+      });
+      client = new Client('test');
+      sinon.stub(client, 'onEvent');
+      request = new Request('test', { a: 1 });
+      request.options.cache = 1000;
+      client.send(request);
+      assert(client.onEvent.calledOnce);
+    });
+    it('should not call onEvent when cache not exists', function () {
+      var client;
+      var request;
+      sinon.stub(redis, 'client').returns({
+        get: function (err, callback) {
+          callback(null, null);
+        },
+        lpush: sinon.stub()
+      });
+      client = new Client('test');
+      sinon.stub(client, 'onEvent');
+      request = new Request('test', { a: 1 });
+      request.options.cache = 1000;
+      client.send(request);
+      assert.equal(client.onEvent.callCount, 0);
+    });
     afterEach(function () {
       redis.client.restore();
       redis.sub.restore();
@@ -256,6 +299,30 @@ describe('Service', function () {
       client._requests[request.id] = request;
       client.onEvent(1, JSON.stringify(event));
       assert(callback.calledWith('Error', undefined));
+    });
+    it('should save event is cache if request has option cache', function () {
+      var client;
+      var request;
+      var event;
+      redis.client.restore();
+      sinon.stub(redis, 'client').returns({
+        set: sinon.spy(),
+        expire: sinon.spy()
+      });
+
+      client = new Client('test');
+      request = client.request('test', { a: 1 });
+      request.cache(1000);
+      event = {
+        id: request.id,
+        status: 'succeeded',
+        data: 1
+      };
+
+      client._requests[request.id] = request;
+      client.onEvent(1, JSON.stringify(event));
+      assert(client._client.set.calledOnce);
+      assert(client._client.expire.calledOnce);
     });
     afterEach(function () {
       redis.client.restore();

@@ -48,6 +48,19 @@ describe('Request', function () {
       });
     });
   });
+  describe('Function: cache', function () {
+    it('should set cache option with cache life', function () {
+      var request = makeRequest('method', { a: 1 });
+      request.cache(1500);
+      assert.equal(request.options.cache, 1500);
+    });
+    it('should throw error if put incorrect value', function () {
+      var request = makeRequest('method', { a: 1 });
+      assert.throws(function () {
+        request.cache(-1);
+      });
+    });
+  });
   describe('Function: isExpired', function () {
     it('should return false if not sent', function () {
       var request = makeRequest('method', { a: 1 });
@@ -202,6 +215,41 @@ describe('Request', function () {
       assert.isNotNull(request.timeoutHandler);
       request.stopTimeout();
       assert.isNull(request.timeoutHandler);
+    });
+  });
+  describe('Function: cacheKey', function () {
+    it('should return cache key created from request data', function () {
+      var request = makeRequest('method', { a: 1 });
+      var key = request.cacheKey('test');
+      assert.isNotNull(key);
+    });
+
+    it('should always return this same key', function () {
+      var request = makeRequest('method', { a: 1 });
+      var key1 = request.cacheKey('test');
+      var key2 = request.cacheKey('test');
+      assert.equal(key1, key2);
+    });
+    it('should return difference keys for different services', function () {
+      var request1 = makeRequest('method', { a: 1 });
+      var request2 = makeRequest('method', { a: 1 });
+      var key1 = request1.cacheKey('test');
+      var key2 = request2.cacheKey('test1');
+      assert.notEqual(key1, key2);
+    });
+    it('should return Equals keys for different request with this same data', function () {
+      var request1 = makeRequest('method', { a: 1 });
+      var request2 = makeRequest('method', { a: 1 });
+      var key1 = request1.cacheKey('test');
+      var key2 = request2.cacheKey('test');
+      assert.equal(key1, key2);
+    });
+    it('should return exists cache key', function () {
+      var key;
+      var request = makeRequest('method', { a: 1 });
+      request._cacheKey = 'existsKey';
+      key = request.cacheKey('test');
+      assert.equal(key, 'existsKey');
     });
   });
 });
