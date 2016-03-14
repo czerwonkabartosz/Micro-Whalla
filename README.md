@@ -11,25 +11,6 @@ It can be used for interprocess communication, or for communication between serv
 
 ```javascript
 var micro = require('micro-whalla');
-var Service = micro.Service;
-var service = new Service('example-service');
-
-service.register('method', function (req, res) {
-    res.done(req.data);
-});
-
-service.register('method2', function (req, res) {
-  res.progress(50);
-  setTimeout(function () {
-    res.done(req.data);
-  }, 300);
-});
-
-service.start();
-```
-
-```javascript
-var micro = require('micro-whalla');
 var Client = micro.Client;
 var client = new Client('example-service');
 
@@ -46,6 +27,39 @@ client
     .on('failed', function (error) {
         console.error(result);
     });
+```
+
+```javascript
+var util = require('util');
+var micro = require('micro-whalla');
+var Service = micro.Service;
+var service;
+
+function ExampleService() {
+  this.repository = function () {
+      return [1, 2, 3];
+    };
+
+  Service.call(this, 'example-service');
+}
+
+util.inherits(ExampleService, Service);
+
+service = new ExampleService();
+
+service.register('method', function (req, res) {
+    res.done(this.repository());
+});
+
+service.register('method2', function (req, res) {
+  res.progress(50);
+  setTimeout(function () {
+    res.done(req.data);
+  }, 300);
+});
+
+service.start();
+
 ```
 
 ## Features
@@ -141,6 +155,32 @@ The handler function is called with ```Request``` and ```Response```params.
 ### Service.prototype.start()
 Used to start service.
 
+### Service.prototype.findAndRegisterMethods(pattern)
+Used to find all methods in folders and register them in the service.
+
+- ```pattern``` - [optional] pattern used to find methods. It defaults to ```/methods/**/*.method.js```
+
+All files should exports Method.
+
+```javascript
+var Method = require('micro-whalla').Method;
+
+function getUser(req, res) {
+  var self = this;
+  var userId = req.data.userId;
+
+  self.usersRepository.findUserById(userId, function (err, user) {
+    if (err) {
+      return res.error(err);
+    }
+
+    return res.done(user);
+  });
+}
+
+module.exports = new Method('getUser', getUser);
+
+```
 
 ## Request
 
@@ -156,6 +196,14 @@ Sets a reqeust timeout. After the time has elapsed without a response is returne
 
 ```javascript
 var request = client.request('method', { param: new Date() }).timeout(1000);
+```
+
+### Request.prototype.cache(time)
+
+Sets a reqeust cache time. During this time result is returned from the cache.
+
+```javascript
+var request = client.request('method', { param: new Date() }).cache(1000);
 ```
 
 ### Request.prototype.fireAndForget()

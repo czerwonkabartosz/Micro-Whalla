@@ -66,24 +66,45 @@ app.listen(3000);
 
 service.js
 ```javascript
+var util = require('util');
 var micro = require('../../index');
 var Service = micro.Service;
+var service;
 
 micro.init({ host: '192.168.99.100', port: 32768 });
-service = new Service('service');
 
-function getDate(req, res) {
-  var data = req.data;
-  res.done('Today is ' + data.param);
+function ExampleService() {
+  this.repository = function () {
+    return [1, 2, 3];
+  };
+
+  Service.call(this, 'example-service');
+
+  this.findAndRegisterMethods();
 }
 
 function error(req, res) {
   res.error(new Error('Error in service'));
 }
 
-service.register('getDate', getDate);
+util.inherits(ExampleService, Service);
+
+service = new ExampleService();
+
 service.register('error', error);
 
 service.start();
+```
+
+methods/getDate.method.js
+```javascript
+var Method = require('micro-whalla').Method;
+
+function getDate(req, res) {
+  var data = req.data;
+  res.done('Today is ' + data.param);
+}
+
+module.exports = new Method('getDate', getDate);
 
 ```
