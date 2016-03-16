@@ -350,8 +350,7 @@ describe('Service', function () {
 
       client._requests[request.id] = request;
       client.onEvent(1, message);
-      assert(client._client.set.calledOnce);
-      assert(client._client.expire.calledOnce);
+      assert(request.emit.calledOnce);
     });
     afterEach(function () {
       redis.client.restore();
