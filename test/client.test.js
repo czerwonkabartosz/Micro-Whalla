@@ -324,6 +324,35 @@ describe('Service', function () {
       assert(client._client.set.calledOnce);
       assert(client._client.expire.calledOnce);
     });
+    it('should deserialize message and set requestId if request has option cache', function () {
+      var client;
+      var message;
+      var request;
+      redis.client.restore();
+      sinon.stub(redis, 'client').returns({
+        set: sinon.spy(),
+        expire: sinon.spy()
+      });
+
+      client = new Client('test');
+      request = client.request('test', { a: 1 });
+      sinon.stub(request, 'emit');
+      request.cache(1000);
+      message = {
+        id: request.id,
+        event: JSON.stringify({
+          id: request.id,
+          status: 'succeeded',
+          data: 1
+        }),
+        cached: true
+      };
+
+      client._requests[request.id] = request;
+      client.onEvent(1, message);
+      assert(client._client.set.calledOnce);
+      assert(client._client.expire.calledOnce);
+    });
     afterEach(function () {
       redis.client.restore();
       redis.sub.restore();
