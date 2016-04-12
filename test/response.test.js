@@ -116,4 +116,26 @@ describe('Response', function () {
       assert(service.sendEvent.notCalled);
     });
   });
+  describe('Function: _timeout', function () {
+    it('should call finish process callback when time is up', function (done) {
+      var request;
+      var response;
+      var startTime;
+      var service = {
+        sendEvent: sinon.spy()
+      };
+      var finishProcessCallback = function () {
+        assert(startTime.getTime() + request.options.timeout <= new Date().getTime());
+        assert(service.sendEvent.calledOnce);
+        done();
+      };
+      startTime = new Date();
+      request = new Request('method', { a: 1 });
+      request.clientId = 1;
+      request.timeout(50);
+
+      response = new Response(request, service, finishProcessCallback);
+      assert.isNotNull(response);
+    });
+  });
 });
