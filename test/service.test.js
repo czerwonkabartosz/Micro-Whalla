@@ -251,20 +251,6 @@ describe('Service', function () {
       assert(Service.prototype._next.calledOnce);
       Service.prototype._next.restore();
     });
-    it('should emit error if method not found', function (done) {
-      var service;
-      var request = new Request('test');
-      service = new Service('test');
-      service.on('error', function (error) {
-        assert.isNotNull(error);
-        assert.equal(error.message, 'Method not found');
-        done();
-      });
-      service.getNextRequest = function (callback) {
-        callback(null, request);
-      };
-      service.process();
-    });
     it('should call response error if method not found', function () {
       var service;
       var request = new Request('test');
