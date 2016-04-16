@@ -190,7 +190,8 @@ describe('Service', function () {
       sinon.stub(redis, 'client').returns({
         once: function (name, callback) {
           callback();
-        }
+        },
+        on: sinon.spy()
       });
       sinon.stub(redis, 'pub').returns({ publish: sinon.spy() });
     });
@@ -198,7 +199,8 @@ describe('Service', function () {
       var service;
       redis.client.restore();
       sinon.stub(redis, 'client').returns({
-        once: sinon.spy()
+        once: sinon.spy(),
+        on: sinon.spy()
       });
       service = new Service('test');
       service.process();
