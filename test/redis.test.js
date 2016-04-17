@@ -9,7 +9,9 @@ describe('Redis', function () {
     var redis;
     beforeEach(function () {
       redis = require('./../lib/redis');
-      sinon.stub(r, 'createClient').returns({});
+      sinon.stub(r, 'createClient').returns({
+        on: sinon.spy()
+      });
     });
     it('should return client', function () {
       var client;
@@ -34,7 +36,7 @@ describe('Redis', function () {
     var redis;
     beforeEach(function () {
       redis = require('./../lib/redis');
-      sinon.stub(r, 'createClient').returns({});
+      sinon.stub(r, 'createClient').returns({ on: sinon.spy() });
     });
     it('should return new client if not exists', function () {
       var client;
@@ -58,7 +60,7 @@ describe('Redis', function () {
     var redis;
     beforeEach(function () {
       redis = require('./../lib/redis');
-      sinon.stub(r, 'createClient').returns({});
+      sinon.stub(r, 'createClient').returns({ on: sinon.spy() });
     });
     it('should return new client if not exists', function () {
       var pub;
@@ -82,7 +84,7 @@ describe('Redis', function () {
     var redis;
     beforeEach(function () {
       redis = require('./../lib/redis');
-      sinon.stub(r, 'createClient').returns({});
+      sinon.stub(r, 'createClient').returns({ on: sinon.spy() });
     });
     it('should return new client if not exists', function () {
       var sub;
@@ -106,7 +108,7 @@ describe('Redis', function () {
     var redis;
     beforeEach(function () {
       redis = require('./../lib/redis');
-      sinon.stub(r, 'createClient').returns({});
+      sinon.stub(r, 'createClient').returns({ on: sinon.spy() });
     });
     it('should set options to create client with options', function () {
       var client;

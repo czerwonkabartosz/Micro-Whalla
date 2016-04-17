@@ -188,9 +188,10 @@ describe('Service', function () {
     beforeEach(function () {
       clock = sinon.useFakeTimers();
       sinon.stub(redis, 'client').returns({
-        on: function (name, callback) {
+        once: function (name, callback) {
           callback();
-        }
+        },
+        on: sinon.spy()
       });
       sinon.stub(redis, 'pub').returns({ publish: sinon.spy() });
     });
