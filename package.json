@@ -1,6 +1,6 @@
 {
   "name": "micro-whalla",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "A simple, fast framework for writing microservices in Node.js communicate using RPC / IPC",
   "main": "index.js",
   "scripts": {
