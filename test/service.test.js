@@ -226,18 +226,6 @@ describe('Service', function () {
       service.process();
       assert.equal(service.running, 0);
     });
-    it('should emit error if getNextRequest return error', function (done) {
-      var service;
-      service = new Service('test');
-      service.on('error', function (error) {
-        assert.isNotNull(error);
-        done();
-      });
-      service.getNextRequest = function (callback) {
-        callback(new Error());
-      };
-      service.process();
-    });
     it('should ignore request is expired', function () {
       var service;
       sinon.spy(Service.prototype, '_next');
