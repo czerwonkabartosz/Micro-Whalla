@@ -14,7 +14,8 @@
     "glob": "^7.0.3",
     "lodash": "^4.11.1",
     "node-uuid": "^1.4.7",
-    "redis": "^2.6.0-2"
+    "redis": "^2.6.0-2",
+    "rsmq": "^0.7.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

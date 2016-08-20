@@ -1,4 +1,4 @@
-var Method = require('micro-whalla').Method;
+var Method = require('../../../index').Method;
 
 function getData(req, res) {
   res.done(this.repository());

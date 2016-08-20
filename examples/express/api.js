@@ -5,8 +5,8 @@ var micro = require('../../index');
 var Client = require('../../index').Client;
 var service;
 
-micro.init({ host: '192.168.99.100', port: 32768 });
-service = new Client('service');
+micro.init({ host: 'redis-16132.c8.us-east-1-3.ec2.cloud.redislabs.com', port: 16132 });
+service = new Client('example-service');
 
 app.get('/', function (req, res) {
   service

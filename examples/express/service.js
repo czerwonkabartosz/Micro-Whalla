@@ -3,7 +3,7 @@ var micro = require('../../index');
 var Service = micro.Service;
 var service;
 
-micro.init({ host: '192.168.99.100', port: 32768 });
+micro.init({ host: 'redis-16132.c8.us-east-1-3.ec2.cloud.redislabs.com', port: 16132 });
 
 function ExampleService() {
   this.repository = function () {
