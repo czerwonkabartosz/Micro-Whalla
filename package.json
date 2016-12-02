@@ -13,8 +13,8 @@
     "callsite": "^1.0.0",
     "glob": "^7.0.3",
     "lodash": "^4.11.1",
-    "node-uuid": "^1.4.7",
-    "redis": "^2.6.0-2"
+    "redis": "^2.6.0-2",
+    "uuid": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
